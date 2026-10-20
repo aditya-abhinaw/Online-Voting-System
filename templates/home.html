@@ -1,0 +1,48 @@
+
+{% extends "base.html" %}
+
+{% block title %}Home | Online Voting System{% endblock %}
+
+{% block content %}
+<div class="p-4 mb-4 bg-white rounded shadow-sm">
+    <h1 class="text-primary">Online Voting System</h1>
+    <p class="lead">Cast your vote securely and view election results.</p>
+</div>
+
+<h3 class="mb-3">Available Elections</h3>
+
+{% for election in elections %}
+<div class="card mb-3 shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title">{{ election.title }}</h5>
+        <p class="card-text">{{ election.description }}</p>
+
+        {% if election.is_open %}
+            <span class="badge bg-success">Open</span>
+        {% else %}
+            <span class="badge bg-secondary">Closed</span>
+        {% endif %}
+
+        {% if election.id in voted_ids %}
+            <span class="badge bg-info text-dark">You have voted</span>
+        {% endif %}
+
+        <div class="mt-3">
+            {% if user.is_authenticated %}
+                <a href="{% url 'election_detail' election.pk %}" class="btn btn-primary">
+                    {% if election.id in voted_ids %}View Election{% else %}Vote{% endif %}
+                </a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-primary">Login to Vote</a>
+            {% endif %}
+
+            <a href="{% url 'results' election.pk %}" class="btn btn-outline-secondary">
+                View Results
+            </a>
+        </div>
+    </div>
+</div>
+{% empty %}
+<div class="alert alert-info">No elections are available yet.</div>
+{% endfor %}
+{% endblock %}

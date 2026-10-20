@@ -1,0 +1,53 @@
+
+{% extends "base.html" %}
+
+{% block title %}Election Results{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body p-4">
+        <h2>{{ election.title }} - Results</h2>
+        <p>Total votes: <strong>{{ total }}</strong></p>
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Candidate</th>
+                        <th>Votes</th>
+                        <th>Percentage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ row.name }}</td>
+                        <td>{{ row.votes }}</td>
+                        <td>{{ row.percent }}%</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">No candidates available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if chart %}
+            <h4 class="mt-4">Vote Distribution</h4>
+            <img src="data:image/png;base64,{{ chart }}"
+                 alt="Election results chart"
+                 class="img-fluid">
+        {% else %}
+            <p class="text-muted">The chart will appear after votes are recorded.</p>
+        {% endif %}
+
+        <a href="{% url 'home' %}" class="btn btn-secondary mt-3">
+            Back to Elections
+        </a>
+    </div>
+</div>
+{% endblock %}
